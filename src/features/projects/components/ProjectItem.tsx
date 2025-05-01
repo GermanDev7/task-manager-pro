@@ -1,6 +1,7 @@
-import { IconButton, ListItem, ListItemText } from "@mui/material";
+import { IconButton, ListItem, ListItemText, Tooltip } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useNavigate } from 'react-router-dom';
 import { PropsProject } from "../types/projects.types";
 
@@ -12,6 +13,11 @@ const ProjectItem = ({ project, onDelete }: PropsProject) => {
         <ListItem
             secondaryAction={
                 <>
+                    <Tooltip title="Ver tareas">
+                        <IconButton onClick={() => navigate(`/projects/${project.id}/tasks`)}>
+                            <AssignmentIcon />
+                        </IconButton>
+                    </Tooltip>
                     <IconButton onClick={() => navigate(`/projects/${project.id}`)}>
                         <EditIcon />
                     </IconButton>
@@ -20,7 +26,6 @@ const ProjectItem = ({ project, onDelete }: PropsProject) => {
                     </IconButton>
                 </>
             }>
-
             <ListItemText
                 primary={project.name}
                 secondary={project.description}

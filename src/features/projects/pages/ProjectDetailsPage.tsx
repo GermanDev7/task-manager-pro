@@ -6,6 +6,7 @@ import { Box, TextField, Typography, Button } from "@mui/material";
 import { useForm } from 'react-hook-form';
 import { updateProject } from "../projectsSlice";
 
+
 const ProjectDetailsPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();

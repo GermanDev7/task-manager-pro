@@ -7,6 +7,7 @@ import { RootState } from '../store/store';
 import ProjectsPage from '../pages/ProjectsPage';
 import DashboardLayout from '../layouts/DashboardLayout';
 import ProjectDetailsPage from '../features/projects/pages/ProjectDetailsPage';
+import ProjectTasksPage from '../pages/ProjectTasksPage';
 
 const AppRouter = () => {
     const { token } = useSelector((state: RootState) => state.auth);
@@ -29,6 +30,7 @@ const AppRouter = () => {
                     <Route path="/" element={<DashboardLayout />}>
                         <Route path="dashboard" element={<DashboardPage />} />
                         <Route path="projects" element={<ProjectsPage />} />
+                        <Route path="projects/:id/tasks" element={<ProjectTasksPage />} />
                         <Route path="projects/:id" element={<ProjectDetailsPage />} />
                         <Route path="*" element={<Navigate to="/dashboard" />} />
                     </Route>
