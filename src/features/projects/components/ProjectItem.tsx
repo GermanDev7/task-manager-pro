@@ -1,4 +1,7 @@
-import { IconButton, ListItem, ListItemText, Tooltip } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import ListItem from "@mui/material/ListItem"
+import ListItemText from "@mui/material/ListItemText"
+import Tooltip from "@mui/material/Tooltip";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AssignmentIcon from '@mui/icons-material/Assignment';

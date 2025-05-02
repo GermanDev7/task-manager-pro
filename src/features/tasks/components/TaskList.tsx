@@ -1,49 +1,72 @@
-import { Card, CardContent, Divider, Typography } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import TaskItem from './TaskItem';
-import { Task } from '../types/task.types';
+import { TaskListProps } from '../types/task.types';
+import ListItem from '@mui/material/ListItem';
+import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
-interface Props {
-  tasks: Task[];
-  onToggle: (id: string) => void;
-  onDelete: (id: string) => void;
-}
 
-const TaskList = ({ tasks, onToggle, onDelete }: Props) => {
+const TaskList = ({ tasks, onToggle, onDelete, onEdit, filter }: TaskListProps) => {
+
   const completedCount = tasks.filter(t => t.completed).length;
   const pendingCount = tasks.length - completedCount;
+  const filteredTasks = tasks.filter(task => {
+    if (filter === 'pending') return !task.completed;
+    if (filter === 'completed') return task.completed;
+    return true;
+  });
 
+  const Row = ({ index, style }: ListChildComponentProps) => {
+    if (index < filteredTasks.length) {
+      const task = filteredTasks[index];
+      return (
+        <ListItem style={style} disableGutters>
+          <TaskItem task={task} onDelete={onDelete} onEdit={onEdit} onToggle={onToggle} />
+        </ListItem>
+      );
+    } else {
+      // Última fila: mostrar el divider y el resumen
+      return (
+        <ListItem style={style} disableGutters>
+          <div style={{ width: '100%' }}>
+            <Divider sx={{ my: 1 }} />
+            <Typography variant="body2" color="text.secondary" mt={1}>
+              {pendingCount} pendientes / {completedCount} completadas
+            </Typography>
+          </div>
+        </ListItem>
+      );
+    }
+  };
+  
   return (
     <Card>
       <CardContent>
         <Typography variant="h6" gutterBottom>
           Tareas
         </Typography>
-
+  
         <Divider sx={{ mb: 2 }} />
-
-        {tasks.length === 0 ? (
+  
+        {filteredTasks.length === 0 ? (
           <Typography variant="body1" color="text.secondary">
-            No hay tareas para este proyecto aún.
+            No hay tareas para este filtro aún.
           </Typography>
         ) : (
-          tasks.map(task => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              onToggle={onToggle}
-              onDelete={onDelete}
-            />
-          ))
+          <FixedSizeList
+            height={400}
+            itemCount={filteredTasks.length + 1}  // 👈 sumamos 1 fila
+            itemSize={80}  // 👈 ajusta si el último item es más alto
+            width="100%"
+          >
+            {Row}
+          </FixedSizeList>
         )}
-
-        <Divider sx={{ mt: 2 }} />
-
-        <Typography variant="body2" color="text.secondary" mt={1}>
-          {pendingCount} pendientes / {completedCount} completadas
-        </Typography>
       </CardContent>
     </Card>
   );
-};
+}
 
 export default TaskList;

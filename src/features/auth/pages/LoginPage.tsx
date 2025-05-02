@@ -1,5 +1,5 @@
 import LoginForm from "../components/LoginForm";
-import { Box } from "@mui/material";
+import Box  from "@mui/material/Box";
 
 const LoginPage = () => {
     return (

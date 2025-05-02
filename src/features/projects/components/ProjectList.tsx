@@ -1,4 +1,4 @@
-import { List } from '@mui/material';
+import List  from '@mui/material/List';
 import ProjectItem from './ProjectItem';
 import { PropsProjectList } from '../types/projects.types';
 

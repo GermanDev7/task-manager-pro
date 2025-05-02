@@ -1,15 +1,22 @@
-import { Box, Typography, Button } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../store/store';
 import { useParams, Link } from 'react-router-dom';
 
-import TaskForm from '../features/tasks/components/TaskForm';
-import TaskList from '../features/tasks/components/TaskList';
-import { addTask, deleteTask, toggleTask } from '../features/tasks/tasksSlice';
+import { lazy, Suspense } from 'react'
+const TaskForm = lazy(() => import('../features/tasks/components/TaskForm'));
+const TaskList = lazy(() => import('../features/tasks/components/TaskList'));
+import { addTask, deleteTask, editTask, toggleTask } from '../features/tasks/tasksSlice';
 
 import { showSnackbar } from '../features/ui/uiSlice';
+import { useState } from 'react';
+import { CircularProgress } from '@mui/material';
 const ProjectTasksPage = () => {
     const { id: projectId } = useParams<{ id: string }>();
+    const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
     const dispatch = useDispatch<AppDispatch>();
 
     const { projects } = useSelector((state: RootState) => state.projects);
@@ -38,6 +45,11 @@ const ProjectTasksPage = () => {
         dispatch(showSnackbar('Tarea eliminada'));
     }
 
+    const handleEditTask = (id: string, title: string) => {
+        dispatch(editTask({ id, title }));
+        dispatch(showSnackbar('Tarea actualizad'));
+    }
+
     if (!project) {
         return (
             <Box>
@@ -55,13 +67,21 @@ const ProjectTasksPage = () => {
             <Link to="/projects">
                 <Button>Volver a proyectos</Button>
             </Link>
-
-            <TaskForm onSubmit={handleAddTask} />
-
-            <TaskList onDelete={handleDeleteTask} onToggle={handleToggleTask} tasks={projectTasks} />
-
-
-
+            <Suspense fallback={<CircularProgress />}>
+                <TaskForm onSubmit={handleAddTask} />
+                <Box sx={{ mb: 2 }}>
+                    <Button variant={filter === 'all' ? 'contained' : 'outlined'} onClick={() => setFilter('all')} sx={{ mr: 1 }}>
+                        Todas
+                    </Button>
+                    <Button variant={filter === 'pending' ? 'contained' : 'outlined'} onClick={() => setFilter('pending')} sx={{ mr: 1 }}>
+                        Pendientes
+                    </Button>
+                    <Button variant={filter === 'completed' ? 'contained' : 'outlined'} onClick={() => setFilter('completed')}>
+                        Completadas
+                    </Button>
+                </Box>
+                <TaskList onDelete={handleDeleteTask} onToggle={handleToggleTask} onEdit={handleEditTask} tasks={projectTasks} filter={filter} />
+            </Suspense>
 
         </Box>
     )

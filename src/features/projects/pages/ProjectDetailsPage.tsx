@@ -2,7 +2,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../store/store";
 import { Project } from "../types/projects.types";
-import { Box, TextField, Typography, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import { useForm } from 'react-hook-form';
 import { updateProject } from "../projectsSlice";
 
